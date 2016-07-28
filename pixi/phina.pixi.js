@@ -32,16 +32,14 @@ phina.define('phina.display.PixiLayer', {
     if (child.pixiObject) {
       this.stage.addChild(child.pixiObject);
     }
-    this.superClass.prototype.addChild.apply(this, arguments);
-    return this;
+    return this.superClass.prototype.addChild.apply(this, arguments);
   },
 
   removeChild: function(child){
     if (child.pixiObject) {
       this.stage.removeChild(child.pixiObject);
     }
-    this.superClass.prototype.removeChild.apply(this, arguments);
-    return this;
+    return this.superClass.prototype.removeChild.apply(this, arguments);
   }
 });
 
@@ -55,13 +53,25 @@ phina.define('phina.display.PixiSprite', {
 
     this.pixiObject = new PIXI.Sprite.fromImage(image.src);
     this.pixiObject.anchor.set(0.5, 0.5);
+
+    // pixi.jsバグってるんだよなぁ
+    this.pixiObject.texture.baseTexture.width = this.image.width;
+    this.pixiObject.texture.baseTexture.height = this.image.height;
+  },
+
+  setFrameIndex: function(index, width, height) {
+    this.superClass.prototype.setFrameIndex.apply(this, arguments);
+    this.pixiObject.texture.frame = new PIXI.Rectangle(this.srcRect.x, this.srcRect.y, this.srcRect.width, this.srcRect.height);
+    return this;
   },
 
   setOrgin: function(x, y) {
     this.pixiObject.anchor.set(x, y);
+    return this.superClass.prototype.setOrigin.apply(this, arguments);
   },
 
   setPosition: function(x, y) {
     this.pixiObject.position.set(x, y);
+    return this.superClass.prototype.setPosition.apply(this, arguments);
   },
 });

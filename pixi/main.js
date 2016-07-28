@@ -24,9 +24,14 @@ phina.define('MainScene', {
           this.frameIndex++;
         }
 
-        var sprite = phina.display.PixiSprite(texture)
-            .addChildTo(that.pixiLayer)
-            .setPosition(SC_W*0.5, SC_H*0.5);
+        var sprite = phina.display.PixiSprite(texture, 64, 64)
+          .addChildTo(that.pixiLayer)
+          .setPosition(SC_W*0.5, SC_H*0.5)
+          .setFrameTrimming(192, 128, 192, 64)
+          .setFrameIndex(0);
+        sprite.update = function(e) {
+          this.frameIndex++;
+        }
 
     }.bind(this));
   },
