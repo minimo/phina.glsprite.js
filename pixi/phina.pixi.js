@@ -21,70 +21,46 @@ phina.define('phina.display.PixiLayer', {
     canvas.context.drawImage(domElement, 0, 0, domElement.width, domElement.height);
   },
 
-  addChild: function(pixiObject){
-    this.stage.addChild(pixiObject);
+  addChild: function(child){
+    if (child.pixiObj) {
+      this.stage.addChild(child.pixiObj);
+    }
+    this.superClass.prototype.addChild.apply(this, arguments);
     return this;
   },
 
-  removeChild: function(pixiObject){
-    this.stage.removeChild(pixiObject);
+  removeChild: function(child){
+    if (child.pixiObj) {
+      this.stage.removeChild(child.pixiObj);
+    }
+    this.superClass.prototype.removeChild.apply(this, arguments);
     return this;
   }
 });
 
-/* 専用コアクラス */
-phina.define('phina.display.PixiApp', {
-     superClass: 'phina.display.DomApp',
+phina.define('phina.display.PixiSprite', {
+  superClass: 'phina.display.DisplayElement',
 
-     renderer: null,
-     domElement: null,
+  pixiObj: null,
 
-     init: function(options) {
-          var options = (options || {}).$safe(phina.display.CanvasApp.defaults);
-          this.renderer = PIXI.autoDetectRenderer(options.width, options.height);
-          options.domElement  = this.renderer.view;
-
-          this.superInit(options);
-
-          this.canvas = phina.graphics.Canvas();
-          this.canvas.canvas = this.canvas.domElement = this.domElement;
-          this.canvas.setSize(options.width, options.height);              　　                  　　　
-          document.body.appendChild(this.domElement);
-          if (options.fit) this.canvas.fitScreen(true);
-
-          this.replaceScene(phina.app.PixiScene());
-     },
-
-     _draw: function(){
-          if (this.currentScene) this.renderer.render(this.currentScene.stage);
-     }
-});
-
-/* 専用シーンクラス */
-phina.define('phina.app.PixiScene', {
-  superClass: 'phina.app.Element',
-  stage: null,
-
-  init: function(options) {
+  init: function(image, width, height) {
     this.superInit();
 
-    var options = ({}).$safe(options, phina.app.Object2D.defaults);
-
-    this.stage = new PIXI.Container();
-    this.width = options.width;
-    this.height = options.height;
-    if (options.backgroundColor) {
-      this.on('enter', function() {
-        this.app.renderer.backgroundColor = options.backgroundColor;
-      });
+    if (typeof image === 'string') {
+      image = phina.asset.AssetManager.get('image', image);
     }
+    this.image = image;
+    this.width = width || this.image.domElement.width;
+    this.height = height || this.image.domElement.height;
+
+    this.pixiObj = new PIXI.Sprite.fromImage(image.src);
   },
 
-  addChild: function(pixiObject){
-    this.stage.addChild(pixiObject);
+  setOrgin: function(x, y) {
+    this.pixiObj.anchor.set(x, y);
   },
 
-  removeChild: function(pixiObject){
-    this.stage.removeChild(pixiObject);
-  }
+  setPosition: function(x, y) {
+    this.pixiObj.position.set(x, y);
+  },
 });
