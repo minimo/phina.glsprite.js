@@ -1,12 +1,19 @@
 
 phina.define('phina.display.PixiLayer', {
-  superClass: 'phina.display.DisplayElement',
+  superClass: 'phina.display.Layer',
 
   stage: null,
   renderer: null,
 
+  /** 子供を 自分のCanvasRenderer で描画するか */
+  renderChildBySelf: true,
+
   init: function(options) {
     this.superInit();
+    options = (options || {}).$safe({
+      width: 640,
+      height: 480
+    });
 
     this.stage = new PIXI.Container();
     this.renderer = PIXI.autoDetectRenderer(options.width, options.height, {transparent: true});
@@ -22,16 +29,16 @@ phina.define('phina.display.PixiLayer', {
   },
 
   addChild: function(child){
-    if (child.pixiObj) {
-      this.stage.addChild(child.pixiObj);
+    if (child.pixiObject) {
+      this.stage.addChild(child.pixiObject);
     }
     this.superClass.prototype.addChild.apply(this, arguments);
     return this;
   },
 
   removeChild: function(child){
-    if (child.pixiObj) {
-      this.stage.removeChild(child.pixiObj);
+    if (child.pixiObject) {
+      this.stage.removeChild(child.pixiObject);
     }
     this.superClass.prototype.removeChild.apply(this, arguments);
     return this;
@@ -39,28 +46,22 @@ phina.define('phina.display.PixiLayer', {
 });
 
 phina.define('phina.display.PixiSprite', {
-  superClass: 'phina.display.DisplayElement',
+  superClass: 'phina.display.Sprite',
 
-  pixiObj: null,
+  pixiObject: null,
 
   init: function(image, width, height) {
-    this.superInit();
+    this.superInit(image, width, height);
 
-    if (typeof image === 'string') {
-      image = phina.asset.AssetManager.get('image', image);
-    }
-    this.image = image;
-    this.width = width || this.image.domElement.width;
-    this.height = height || this.image.domElement.height;
-
-    this.pixiObj = new PIXI.Sprite.fromImage(image.src);
+    this.pixiObject = new PIXI.Sprite.fromImage(image.src);
+    this.pixiObject.anchor.set(0.5, 0.5);
   },
 
   setOrgin: function(x, y) {
-    this.pixiObj.anchor.set(x, y);
+    this.pixiObject.anchor.set(x, y);
   },
 
   setPosition: function(x, y) {
-    this.pixiObj.position.set(x, y);
+    this.pixiObject.position.set(x, y);
   },
 });

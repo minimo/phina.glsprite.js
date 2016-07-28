@@ -16,10 +16,10 @@ phina.define('MainScene', {
 //        phina.display.Sprite(texture).addChildTo(that).setOrigin(0,0);
 
         that.tomapiko = phina.display.Sprite(texture, 64, 64)
-  //        .addChildTo(that)
+          .addChildTo(that)
           .setFrameTrimming(192, 128, 192, 64)
           .setFrameIndex(0)
-          .setPosition(SC_W*0.5, SC_H*0.5);
+          .setPosition(SC_W*0.1, SC_H*0.1);
         that.tomapiko.update = function(e) {
           this.frameIndex++;
         }
@@ -28,12 +28,6 @@ phina.define('MainScene', {
             .addChildTo(that.pixiLayer)
             .setPosition(SC_W*0.5, SC_H*0.5);
 
-/*
-        var sprite = new PIXI.Sprite.fromImage(texture.src);
-        sprite.position.set(SC_W*0.5, SC_H*0.5);
-        sprite.anchor.set(0.5, 0.5);
-        that.pixiLayer.addChild(sprite);
-*/
     }.bind(this));
   },
 });
