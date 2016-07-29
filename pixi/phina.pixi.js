@@ -12,7 +12,7 @@ phina.define('phina.display.PixiLayer', {
     this.superInit();
     options = (options || {}).$safe({
       width: 640,
-      height: 480
+      height: 640
     });
 
     this.stage = new PIXI.Container();
@@ -51,12 +51,21 @@ phina.define('phina.display.PixiSprite', {
   init: function(image, width, height) {
     this.superInit(image, width, height);
 
-    this.pixiObject = new PIXI.Sprite.fromImage(image.src);
+    this.pixiObject = new PIXI.Sprite.fromImage(this.image.src);
     this.pixiObject.anchor.set(0.5, 0.5);
 
     // pixi.jsバグってるんだよなぁ
-    this.pixiObject.texture.baseTexture.width = this.image.width;
-    this.pixiObject.texture.baseTexture.height = this.image.height;
+    this.pixiObject.texture.baseTexture.width = this.image.domElement.width;
+    this.pixiObject.texture.baseTexture.height = this.image.domElement.height;
+
+    this.on('enterframe', function(e) {
+      // Elementと必要な情報を同期
+      this.pixiObject.position.set(this.x, this.y);
+      this.pixiObject.rotation = this.rotation.toRadian();
+      this.pixiObject.scale.set(this.scaleX, this.scaleY);
+      this.pixiObject.anchor.set(this.originX, this.originY);
+      this.pixiObject.alpha = this.alpha;
+    });
   },
 
   setFrameIndex: function(index, width, height) {
@@ -65,13 +74,28 @@ phina.define('phina.display.PixiSprite', {
     return this;
   },
 
-  setOrgin: function(x, y) {
-    this.pixiObject.anchor.set(x, y);
-    return this.superClass.prototype.setOrigin.apply(this, arguments);
+  setImage: function(newImage, width, height) {
+    this.image = newImage;
+    this.pixiObject = new PIXI.Sprite.fromImage(newImage.src);
+    this.pixiObject.texture.baseTexture.width = this.image.domElement.width;
+    this.pixiObject.texture.baseTexture.height = this.image.domElement.height;
+    this.pixiObject.texture.frame = new PIXI.Rectangle(this.srcRect.x, this.srcRect.y, this.srcRect.width, this.srcRect.height);
+    return this;
   },
 
   setPosition: function(x, y) {
     this.pixiObject.position.set(x, y);
     return this.superClass.prototype.setPosition.apply(this, arguments);
+  },
+
+  setOrigin: function(x, y) {
+    this.pixiObject.anchor.set(x, y);
+    return this.superClass.prototype.setOrigin.apply(this, arguments);
+  },
+
+  setScale: function(x, y) {
+    y = y || x;
+    this.pixiObject.scale.set(x, y);
+    return this.superClass.prototype.setOrigin.apply(this, arguments);
   },
 });
