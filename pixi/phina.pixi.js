@@ -70,7 +70,7 @@ phina.define('phina.pixi.Sprite', {
   },
 
   setFrameIndex: function(index, width, height) {
-    this.superClass.prototype.setFrameIndex.apply(this, arguments);
+    phina.display.Sprite.prototype.setFrameIndex.apply(this, arguments);
     this.pixiObject.texture.frame = new PIXI.Rectangle(this.srcRect.x, this.srcRect.y, this.srcRect.width, this.srcRect.height);
     return this;
   },
