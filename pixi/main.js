@@ -60,7 +60,7 @@ phina.define('MainScene', {
         .setFrameIndex(0)
         .setPosition(position.x, position.y);
     } else {
-      sp = phina.display.PixiSprite(this.texture, 64, 64)
+      sp = phina.pixi.Sprite(this.texture, 64, 64)
         .addChildTo(this.pixiLayer)
         .setFrameTrimming(192, 128, 192, 64)
         .setFrameIndex(0)
