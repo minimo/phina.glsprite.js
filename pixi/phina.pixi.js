@@ -1,3 +1,4 @@
+phina.pixi = phina.pixi || {};
 
 phina.define('phina.display.PixiLayer', {
   superClass: 'phina.display.Layer',
@@ -43,7 +44,7 @@ phina.define('phina.display.PixiLayer', {
   }
 });
 
-phina.define('phina.display.PixiSprite', {
+phina.define('phina.pixi.Sprite', {
   superClass: 'phina.display.Sprite',
 
   pixiObject: null,
