@@ -29,7 +29,7 @@ phina.define('MainScene', {
     //Tomapiko読み込み
     this.finish = false;
     var that = this;
-    var url = "https://rawgit.com/phi-jp/phina.js/develop/assets/images/tomapiko_ss.png";
+    var url = "../assets/tomapiko_ss.png";
     this.texture = phina.asset.Texture();
     this.texture.load(url).then(function() {
       for (var i = 0; i < 10; i++) {
